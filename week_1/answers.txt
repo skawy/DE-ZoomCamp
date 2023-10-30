@@ -1,0 +1,55 @@
+1) --iidfile string          Write the image ID to the file
+
+2) 3
+
+3) select count(1)
+    from green_trip_data
+        where lpep_pickup_datetime >= timestamp '2019-01-15 00:00:00'
+        and lpep_pickup_datetime < timestamp '2019-01-16 00:00:00'
+        and lpep_dropoff_datetime >= timestamp '2019-01-15 00:00:00'
+        and lpep_dropoff_datetime < timestamp '2019-01-16 00:00:00';
+    
+    different answer:
+    SELECT count(*)
+    FROM green_trip_data
+    where DATE(lpep_pickup_datetime) = '2019-01-15'
+    and DATE(lpep_dropoff_datetime) = '2019-01-15';
+
+20530
+
+
+4) SELECT CAST(lpep_pickup_datetime AS DATE) as "day" , max(trip_distance) as "Distance Max"
+    FROM green_trip_data
+    GROUP by CAST(lpep_pickup_datetime AS DATE) ORDER by max(trip_distance) DESC ;
+    
+    // you can cast with DATE(column) instead of CAST function
+    +------------+--------------+
+    | day        | Distance Max |
+    |------------+--------------|
+    | 2019-01-15 | 117.99       |
+
+
+
+5) select passenger_count , count(passenger_count)
+    from (
+        select CAST(lpep_pickup_datetime AS DATE) as "day",passenger_count 
+        from green_trip_data 
+        where CAST(lpep_pickup_datetime AS DATE) = '2019-01-01'
+    ) as "inner table"
+    where passenger_count = 2 or passenger_count = 3
+    GROUP by passenger_count
+
+    simple solution
+    SELECT passenger_count, count(*)
+    FROM green_trip_data
+    WHERE date(lpep_pickup_datetime) = '2019-01-01'
+    GROUP BY passenger_count
+    
+    -----------------+-------+
+    | passenger_count | count |
+    |-----------------+-------|
+    | 2               | 1282  |
+    | 3               | 254   |
+    +-----------------+-------+
+
+6) 

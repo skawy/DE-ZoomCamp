@@ -1,0 +1,86 @@
+creating external_table
+``
+
+CREATE OR REPLACE EXTERNAL TABLE `resolute-choir-403411.dezoomcamp.fhv_2019_external`
+OPTIONS (
+  format = 'CSV',
+  uris = [
+'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-01.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-02.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-03.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-04.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-05.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-06.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-07.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-08.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-09.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-10.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-11.csv'
+,'gs://yellow_trip_zc/data/fhv/fhv_tripdata_2019-12.csv'
+  ]
+);
+
+``
+creating internal big query table from external_table
+``
+
+CREATE OR REPLACE TABLE `resolute-choir-403411.dezoomcamp.fhv_2019_internal` AS
+SELECT * FROM `resolute-choir-403411.dezoomcamp.fhv_2019_external`;
+
+``
+
+1) 23143222 + 1707649 +  1475564 + 1937844 + 2073045 + 2009886 +
+1947739 +  1880407 + 1248514 +  1897493 + 1879137 + 2044196
+= 43244696
+
+
+2) SELECT count (DISTINCT(Affiliated_base_number))
+FROM `resolute-choir-403411.dezoomcamp.fhv_2019_internal`;
+
+SELECT count (DISTINCT(Affiliated_base_number))
+FROM `resolute-choir-403411.dezoomcamp.fhv_2019_external`;
+
+
+225.82 MB for the External Table and 47.60MB for the BQ Table
+
+3)
+select count(*) 
+from `resolute-choir-403411.dezoomcamp.fhv_2019_internal`
+WHERE PUlocationID is null and DOlocationID is null  ;
+717,748
+
+4) Partition by pickup_datetime Cluster on affiliated_base_number
+
+5)
+
+first to Partition
+``
+CREATE OR REPLACE TABLE `resolute-choir-403411.dezoomcamp.fhv_2019_internal_partitioned`
+PARTITION BY
+  DATE(pickup_datetime) AS
+SELECT * FROM `resolute-choir-403411.dezoomcamp.fhv_2019_internal`;
+``
+
+before Partitioning
+
+SELECT DISTINCT(affiliated_base_number)
+FROM `resolute-choir-403411.dezoomcamp.fhv_2019_internal`
+WHERE DATE(pickup_datetime) BETWEEN '2019-03-01' AND '2019-03-31';
+
+Bytes processed
+    647.87 MB
+
+after Partitioning
+
+SELECT DISTINCT(affiliated_base_number)
+FROM `resolute-choir-403411.dezoomcamp.fhv_2019_internal_partitioned`
+WHERE DATE(pickup_datetime) BETWEEN '2019-03-01' AND '2019-03-31';
+
+Bytes processed
+    23.06 MB
+
+647.87 MB for non-partitioned table and 23.06 MB for the partitioned table
+
+6) GCP Bucket
+
+7) False

@@ -20,6 +20,9 @@ OPTIONS (
   ]
 );
 
+* instead of typing all fils in the array you can just use
+    URIS = ['gs://yellow_trip_zc/data/fhv/*.csv']
+
 ``
 creating internal big query table from external_table
 ``
@@ -29,7 +32,10 @@ SELECT * FROM `resolute-choir-403411.dezoomcamp.fhv_2019_external`;
 
 ``
 
-1) 23143222 + 1707649 +  1475564 + 1937844 + 2073045 + 2009886 +
+1) select count(*)
+from  `resolute-choir-403411.dezoomcamp.fhv_2019_internal`;
+
+23143222 + 1707649 +  1475564 + 1937844 + 2073045 + 2009886 +
 1947739 +  1880407 + 1248514 +  1897493 + 1879137 + 2044196
 = 43244696
 
@@ -41,7 +47,7 @@ SELECT count (DISTINCT(Affiliated_base_number))
 FROM `resolute-choir-403411.dezoomcamp.fhv_2019_external`;
 
 
-225.82 MB for the External Table and 47.60MB for the BQ Table
+0 MB for the External Table and 317.94MB for the BQ Table
 
 3)
 select count(*) 

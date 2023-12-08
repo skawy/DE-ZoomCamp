@@ -2,13 +2,45 @@ version: 2
 sources:
   - name: resolute-choir-403411
     database: resolute-choir-403411
-    schema: dezoomcamp
+    schema: dbt_production
     tables:
       - name: green
       - name: yellow
+      - name: fhv_2019
 
 
 models:
+    - name: staging_fhv_2019
+      description: >
+        This Model For FHV and stands for For-hire vehicles
+        and the year is 2019
+      columns:
+        - name: dispatching_base_num
+          description: The TLC Base License Number of the base that dispatched the trip, Data type is integer
+
+
+        - name: Pickup_datetime
+          description: The date and time of the trip pick-up
+
+        - name: DropOff_datetime
+          description: The date and time of the trip dropoff
+
+        - name: PULocationID
+          description: TLC Taxi Zone in which the trip began
+
+        - name: DOLocationID
+          description: TLC Taxi Zone in which the trip ended
+
+        - name: SR_Flag
+          description: >
+            indicates if the trip was a part of a shared ride chain offered by a
+            High Volume FHV company (e.g. Uber Pool, Lyft Line). For shared
+            trips, the value is 1. For non-shared rides, this field is null
+
+        - name: Affiliated_base_number
+          description: Data Type is String
+
+        
     - name: staging_green
       description: >
         Trip made by green taxis, also known as boro taxis and street-hail liveries.

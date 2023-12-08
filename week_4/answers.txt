@@ -1,0 +1,25 @@
+## I Had A problem Loading Data in Big Query due to schemas in 2019 and 2020
+## So I had different result from their answers
+
+1) 
+SELECT count(*) FROM `resolute-choir-403411.dbt_production.fact_trips`
+where extract(year from pickup_datetime) in (2019,2020);
+115706324
+
+2)
+Yellow:92.9% , Green:7.1%
+I Created A Report To My fact_trips Table
+
+3)
+SELECT count(*) FROM `resolute-choir-403411.dbt_production.staging_fhv_2019`
+where extract(year from pickup_datetime) in (2019);
+43244696
+
+4)
+SELECT count(*) FROM `resolute-choir-403411.dbt_production.fact_fhv_trips`
+where extract(year from pickup_datetime) in (2019);
+22998722
+
+5)
+January
+I Created A Report To My fact_fhv_trips Table

@@ -1,0 +1,72 @@
+## All Executed Code To Get This Result Are Shown In The Python Notebook
+
+1) 
+spark.version = 3.4.2
+
+2)
+What is the average size of the Parquet After Partitioning is
+24MB
+
+3)
+taxi trips were there on June 15:
+```
+spark.sql("""
+    SELECT
+        count(*)
+    FROM
+        fhvhv_june_2021
+    WHERE DATE(pickup_datetime) = '2021-06-15'
+    """).show()
+```
++--------+
+|count(1)|
++--------+
+|  452470|
++--------+
+
+4)
+longest trip in Hours: 66.87 Hours
+```
+spark.sql("""
+SELECT
+    TIMESTAMPDIFF(HOUR, pickup_datetime, dropoff_datetime) AS difference
+FROM 
+    fhvhv_june_2021
+ORDER BY difference DESC LIMIT 5
+""").show()
+```
++----------+
+|difference|
++----------+
+|        66|
+|        25|
+|        19|
+|        18|
+|        16|
++----------+
+
+5)
+Spark’s User Interface on port: 4040
+
+6)
+Most frequent pickup location Zone:  Crown Heights North
+```
+spark.sql("""
+SELECT
+    PULocationID,
+    Zone,
+    count(*) as PUCount
+FROM
+    joined_table
+GROUP BY
+    PULocationID,Zone
+ORDER BY PUCount DESC LIMIT 2
+""").show()
+```
++------------+-------------------+-------+
+|PULocationID|               Zone|PUCount|
++------------+-------------------+-------+
+|          61|Crown Heights North| 231279|
+|          79|       East Village| 221244|
++------------+-------------------+-------+
+
